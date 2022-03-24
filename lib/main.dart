@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       initialRoute: '/',
-      routes: {
+      routes:{
         '/': (context) => LogoScreen(),
         '/home': (context) => HomeScreen(),
       },
