@@ -8,7 +8,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'home/apppar.dart';
-import 'home/home_screen.dart';
 import 'home/intro.dart';
 
 class LogoScreen extends StatelessWidget {
@@ -16,31 +15,28 @@ class LogoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: allAppBar(),
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
             width: double.infinity,
-            height: MediaQuery
-                .of(context).size.height / 2.3,
+            height: MediaQuery.of(context).size.height / 2.3,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Expanded(
                   child: AnimatedSplashScreen(
-                    duration: 2920,
+                    duration: 2940,
                     splashTransition: SplashTransition.rotationTransition,
                     pageTransitionType: PageTransitionType.rightToLeft,
                     backgroundColor: Colors.white12,
                     nextScreen: Intro(),
                     splash: CircleAvatar(
                       child: ClipRRect(
-
                         child: Image.asset(
                           'assets/logo/green.jpg',
-                          width:73.0,
+                          width: 73.0,
                         ),
                         borderRadius: BorderRadius.circular(25.0),
                       ),
@@ -71,8 +67,8 @@ class LogoScreen extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(top: 100.0
-              // top: ScreenUtil.instance.setWidth(160.0)
-            ),
+                // top: ScreenUtil.instance.setWidth(160.0)
+                ),
             child: SpinKitThreeBounce(color: Colors.green[400]),
           )
         ],
@@ -80,4 +76,3 @@ class LogoScreen extends StatelessWidget {
     );
   }
 }
-
