@@ -1,5 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
+// import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:green_building/home/apppar.dart';
 import 'package:green_building/home/imagesintro.dart';
 import 'package:green_building/home/video.dart';
@@ -16,9 +18,9 @@ class _IntroState extends State<Intro> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+     String _dynam = 'en';
     return Scaffold(
-      appBar: introAppBar(),
+      appBar: allAppBar(),
       body: ListView(
         children: [
           LTabPageSelector(),
@@ -30,7 +32,7 @@ class _IntroState extends State<Intro> {
               ),
               child: Center(
                 child: Text(
-                  'ما هي الأبنية الخضراء ؟  ',
+                  "intro_qus".tr,
                   style: TextStyle(
                       letterSpacing: 1.0,
                       // color: Col,
@@ -43,49 +45,43 @@ class _IntroState extends State<Intro> {
               ),
             ),
           ),
-          Container(
-            width: double.infinity,
+          Directionality(
+            textDirection:
+            // TextDirection.rtl,
+                _dynam == 'en' ? TextDirection.ltr : TextDirection.rtl,
             child: Padding(
-              padding: const EdgeInsets.only(
-                right: 10.0,
-              ),
-              child: Text(
-                'هي مبانى يتم تصميمها لتحقيق الاستدامة'
-                '.وذلك استنادا إلي بعض المعايير الدولية من المؤسسات المختصة التي تقيس مدي '
-                'توافق المبني مع البيئة.وهي طريقة مسئولة بيئياً وتدعم كفاءة الموارد',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    letterSpacing: 3.5,
-                    // color: Col,
-                    // foreground: Paint()..shader = linearGradient,
-                    fontFamily: 'Cairo-Light',
-                    color: Colors.black45,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17.9),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Container(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 10.0,
+                  ),
+                  child: Text(
+                    "body_intro".tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        letterSpacing: 1.3,
+                        // fontFamily: 'Cairo-Regular',
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.7),
+                  ),
+                ),
               ),
             ),
           ),
 
-         // بتن لتغير اللغه
-         /*  Center(child: Text('data'.tr().toString())),
-          RaisedButton(
-              child: Text('to english'),
-              onPressed: () {
-                setState(() {
-                  // EasyLocalization.of(context).locale = Locale('ar', 'SA');
-                  EasyLocalization.of(context).locale = Locale('en', 'US');
-                });
-              }),
-              */
-
-
-          Container(
-            height: size.height * .239,
-            width: double.infinity,
-            child: Video(),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Container(
+              height: size.height * .239,
+              width: double.infinity,
+              child: Video(),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(13.5),
@@ -93,7 +89,7 @@ class _IntroState extends State<Intro> {
                   color: Colors.green,
                   child: FlatButton(
                     child: Text(
-                      'معرفة المزيد',
+                      'btnNext'.tr,
                       style: StyleforText(),
                     ),
                     onPressed: () {

@@ -1,40 +1,41 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../style.dart';
 
 class PTitle extends StatelessWidget {
+  String _dym = 'ar';
+
   @override
   Widget build(BuildContext context) {
-    return
-      Row(
+    return Directionality(
+      textDirection: _dym == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        // textDirection: TextDirection.ltr,
         children: [
+          Text(
+            "time".tr,
+            style: StyleforText(),
+          ),
 
           Text(
-            'التكلفة',
-            style: StyleforText(),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width/40,
-          ),
-          Text(
-            'الوقت',
-            style: StyleforText(),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width/17,
-          ),
-          Text(
-            'النسبة',
+            "cost".tr,
             style: StyleforText(),
           ),
           Text(
-            '        نوع الخطر   ',
+            "rate".tr,
+            style: StyleforText(),
+          ),
+          // SizedBox(
+          //   width: MediaQuery.of(context).size.width/17.5,
+          // ),
+          Text(
+            " Kind of Danger".tr,
             style: StyleforText(),
           ),
         ],
-      )
-    ;
+      ),
+    );
   }
 }

@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:green_building/models/pdftrad.dart';
 
 import '../style.dart';
+import 'calculation.dart';
 
 class nextRiskTrad extends StatefulWidget {
+  final String? nextdropAreaSelectedTrad, nextdropTimeSelectedTrad;
+  final double nextAreaTrad;
+
+  nextRiskTrad(
+      {Key? key,
+      required this.nextAreaTrad,
+      this.nextdropAreaSelectedTrad,
+      this.nextdropTimeSelectedTrad})
+      : super(key: key);
+
   @override
   State<nextRiskTrad> createState() => _LTabPageSelectorState();
 }
@@ -11,11 +24,28 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
     with SingleTickerProviderStateMixin {
   final int _numDots = 7;
   late final TabController _controller;
+  String _da = 'en';
+  CalTraditionalArea Ta = CalTraditionalArea();
+  static List<double> lastTime = [];
+  static List<double> lastCost = [];
+  static List<double> lastRatio = [];
+  late String ntadrop;
+  late String nttdrop;
+  late double nt;
+  var ratio;
 
   @override
   void initState() {
     super.initState();
     _controller = TabController(length: _numDots, vsync: this);
+    nt = widget.nextAreaTrad;
+    ntadrop = widget.nextdropAreaSelectedTrad!;
+    nttdrop = widget.nextdropTimeSelectedTrad!;
+    Ta = Ta.funTrad(nt, ntadrop, nttdrop);
+    lastCost = Ta.newCost;
+    lastTime = Ta.newTime;
+    lastRatio = Ta.newRatio;
+
   }
 
   void _moveNext() {
@@ -28,20 +58,18 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
 
   List<Widget> widgets = [
     //1:5
-  Builder(builder: (BuildContext context) {
-    var s = MediaQuery
-        .of(context)
-        .size;
-    return
-      Container(
-        // height: s.height * .67,
-        height: 512.0,
-        child: ListView(
-          children: [
-            //1
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+    Builder(builder: (BuildContext context) {
+      var s = MediaQuery.of(context).size;
+      String _da = "en";
+      return Directionality(
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Container(
+          // height: s.height * .67,
+          height: 512.0,
+          child: ListView(
+            children: [
+              //1
+              Container(
                 height: s.height / 8,
                 // height: 100.0,
                 width: double.infinity,
@@ -52,54 +80,53 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'مخاطر مالية',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "financial risk".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       // width: 70.0,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 71 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '71 %',
+                                // '${lastRatio[0]}' == null ? '' : '${lastRatio[0]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       // width: 70.0,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[0]}' == null ? '' : '${lastCost[0]}',
+                                // '55',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       // width: 70.0,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[0]}' == null ? '' : '${lastTime[0]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //2
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //2
+              Container(
                 height: s.height / 8,
                 // height: 100.0,
                 width: double.infinity,
@@ -110,51 +137,49 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'التأخير في جدول المخاطر',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "Delay in schedule risk".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width /5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 75 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '75 %',
+                                // '${lastRatio[1]}' == null ? '' : '${lastRatio[1]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[1]}' == null ? '' : '${lastCost[1]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[1]}' == null ? '' : '${lastTime[1]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //3
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //3
+              Container(
                 height: s.height / 7.5,
                 width: double.infinity,
                 child: Row(
@@ -164,51 +189,49 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'منتجات ومواد البناء',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "Building products and materials ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 79 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '79 %',
+                                // '${lastRatio[2]}' == null ? '' : '${lastRatio[2]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[2]}' == null ? '' : '${lastCost[2]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[2]}' == null ? '' : '${lastTime[2]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //4
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //4
+              Container(
                 height: s.height / 7.2,
                 width: double.infinity,
                 child: Row(
@@ -218,51 +241,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'توافر الدليل الإرشادي للتصميم',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "Design guideline availability ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 76 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '76 %',
+
+                                // '${lastRatio[3]}' == null ? '' : '${lastRatio[3]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[3]}' == null ? '' : '${lastCost[3]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[3]}' == null ? '' : '${lastTime[3]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //5
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //5
+              Container(
                 height: s.height / 7.2,
                 width: double.infinity,
                 child: Row(
@@ -272,67 +294,68 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'عدم اليقين بشأن توفير الطاقة',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "Energy saving uncertainty ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 76 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '76 %',
+
+                                // '${lastRatio[4]}' == null ? '' : '${lastRatio[4]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[4]}'==null?'':'${lastCost[4]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[4]}' == null ? '' : '${lastTime[4]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-
-          ],
+            ],
+          ),
         ),
       );
-  }),
-  Builder(builder: (BuildContext context) {
-    var s = MediaQuery
-        .of(context)
-        .size;
-    return
-      // 6:10
-      Container(
-        height: s.height * .66,
-        // height: 512.0,
+    }),
+    Builder(builder: (BuildContext context) {
+      var s = MediaQuery.of(context).size;
+      String _da = 'en';
 
-        child: ListView(
-          children: [
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+      return
+          // 6:10
+          Directionality(
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Container(
+          height: s.height * .66,
+          // height: 512.0,
+
+          child: ListView(
+            children: [
+              Container(
                 height: s.height / 7.8,
                 width: double.infinity,
                 child: Row(
@@ -342,51 +365,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'نتائج شهادة البناء التقليدية',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "traditional building certification results ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 77 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '77 %',
+
+                                // '${lastRatio[5]}' == null ? '' : '${lastRatio[5]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[5]}'==null?'':'${lastCost[5]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[5]}' == null ? '' : '${lastTime[5]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //7
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //7
+              Container(
                 height: s.height / 7.7,
                 width: double.infinity,
                 child: Row(
@@ -396,51 +418,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'مخاطر أداء الفريق',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "Team performance risk".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 77 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '77 %',
+
+                                // '${lastRatio[6]}' == null ? '' : '${lastRatio[6]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[6]}'==null?'':'${lastCost[6]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[6]}' == null ? '' : '${lastTime[6]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //8
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //8
+              Container(
                 height: s.height / 7.6,
                 width: double.infinity,
                 child: Row(
@@ -450,51 +471,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'العميل هو هدف عدم اليقين',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "client is goal uncertainty ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 77 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '77 %',
+
+                                // '${lastRatio[7]}' == null ? '' : '${lastRatio[7]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[7]}'==null?'':'${lastCost[7]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[7]}' == null ? '' : '${lastTime[7]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //9
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //9
+              Container(
                 height: s.height / 7.5,
                 width: double.infinity,
                 child: Row(
@@ -504,51 +524,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'المخاطر التنظيمية / التشريعية',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "regulatory / legislative risk".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 78 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '78 %',
+
+                                // '${lastRatio[8]}' == null ? '' : '${lastRatio[8]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[8]}'==null?'':'${lastCost[8]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[8]}' == null ? '' : '${lastTime[8]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //10
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //10
+              Container(
                 height: s.height / 7.5,
                 width: double.infinity,
                 child: Row(
@@ -558,67 +577,69 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'مخاطر التصميم',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "Design risk ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 79 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '79 %',
+
+                                // '${lastRatio[9]}' == null ? '' : '${lastRatio[9]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[9]}'==null?'':'${lastCost[9]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[9]}' == null ? '' : '${lastTime[9]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
-  }),
-  Builder(builder: (BuildContext context) {
-    var s = MediaQuery
-        .of(context)
-        .size;
-    return
-      //11:15
-      Container(
-        height: s.height * .66,
-        // height: 512.0,
+    }),
+    Builder(builder: (BuildContext context) {
+      var s = MediaQuery.of(context).size;
+      String _da = 'en';
 
-        child: ListView(
-          children: [
-            //11
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+      return
+          //11:15
+          Directionality(
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Container(
+          height: s.height * .66,
+          // height: 512.0,
+
+          child: ListView(
+            children: [
+              //11
+              Container(
                 height: s.height / 7.5,
                 width: double.infinity,
                 child: Row(
@@ -628,51 +649,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'قلة الاتصالات',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "Lack of communications".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 77 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '77 %',
+
+                                // '${lastRatio[10]}' == null ? '' : '${lastRatio[10]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[10]}'==null?'':'${lastCost[10]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[10]}' == null ? '' : '${lastTime[10]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //12
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //12
+              Container(
                 height: s.height / 7.5,
                 width: double.infinity,
                 child: Row(
@@ -682,51 +702,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'رسومات ومساحات غير مكتملة',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "incomplete drawings & spaces".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 77 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '77 %',
+
+                                // '${lastRatio[11]}' == null ? '' : '${lastRatio[11]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[11]}'==null?'':'${lastCost[11]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[11]}' == null ? '' : '${lastTime[11]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //13
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //13
+              Container(
                 height: s.height / 7.5,
                 width: double.infinity,
                 child: Row(
@@ -736,51 +755,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'عدم وجود عقد',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "lack of contract".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 75 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '75 %',
+
+                                // '${lastRatio[12]}' == null ? '' : '${lastRatio[12]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[12]}'==null?'':'${lastCost[12]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[12]}' == null ? '' : '${lastTime[12]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //14
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //14
+              Container(
                 height: s.height / 7.5,
                 width: double.infinity,
                 child: Row(
@@ -790,51 +808,50 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'تقلب في أسعار الصرف',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "fluctuation in exchange rates ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 78 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '78 %',
+
+                                // '${lastRatio[13]}' == null ? '' : '${lastRatio[13]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[13]}'==null?'':'${lastCost[13]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[13]}' == null ? '' : '${lastTime[13]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-            //15
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Container(
+              //15
+              Container(
                 height: s.height / 7.3,
                 width: double.infinity,
                 child: Row(
@@ -844,1094 +861,1113 @@ class _LTabPageSelectorState extends State<nextRiskTrad>
                       child: Card(
                           child: Center(
                               child: Text(
-                                'إجراءات معقدة للحصول على الموافقات',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                        "complex procedures to obtain approvals ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 5.2,
                       child: Card(
                           child: Center(
                               child: Text(
-                                ' 74 %',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '74 %',
+
+                                // '${lastRatio[14]}' == null ? '' : '${lastRatio[14]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     //هنا هنحط حاصل ضرب النسبء ف الوقت
 
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.1,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastCost[14]}'==null?'':'${lastCost[14]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                     Container(
-                      width: s.width / 5,
+                      width: s.width / 4.7,
                       child: Card(
                           child: Center(
                               child: Text(
-                                '  ',
-                                style: styleForValueLAbel(),
-                                textAlign: TextAlign.center,
-                              ))),
+                                '${lastTime[14]}' == null ? '' : '${lastTime[14]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
-  }),
-    Builder(builder: (BuildContext context){
-      var s =MediaQuery.of(context).size;
+    }),
+    Builder(builder: (BuildContext context) {
+      var s = MediaQuery.of(context).size;
+      String _da = 'en';
+
       return
-    //16:20
-    Container(
-      height: s.height * .66,
-      // height: 512.0,
-
-      child: ListView(
-        children: [
-          //16
+          //16:20
           Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.5,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'قيود الاستيراد / التصدير',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 77 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Container(
+          height: s.height * .66,
+          // height: 512.0,
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //17
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.4,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'التوزيع غير الواضح للأدوار والمسؤوليات',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 72 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+          child: ListView(
+            children: [
+              //16
+              Container(
+                height: s.height / 7.5,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "import / export restrictions ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '77 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //18
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.6,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'نقص الأموال',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 75 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+                                // '${lastRatio[15]}' == null ? '' : '${lastRatio[15]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[15]}'==null?'':'${lastCost[15]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[15]}' == null ? '' : '${lastTime[15]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          //19
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.5,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'متطلبات غير واضحة للمالكين',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 75 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+              //17
+              Container(
+                height: s.height / 7.4,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "unclear allocation of roles and responsibilities ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '72 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //20
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.4,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'التدخلات غير الملائمة للعملاء',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 74 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+                                // '${lastRatio[16]}' == null ? '' : '${lastRatio[16]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[16]}'==null?'':'${lastCost[16]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[16]}' == null ? '' : '${lastTime[16]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              //18
+              Container(
+                height: s.height / 7.6,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "shortage of funds ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '75 %',
+
+                                // '${lastRatio[17]}' == null ? '' : '${lastRatio[17]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[17]}'==null?'':'${lastCost[17]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[17]}' == null ? '' : '${lastTime[17]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+              //19
+              Container(
+                height: s.height / 7.5,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "unclear requirements of owners ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '75 %',
+
+                                // '${lastRatio[18]}' == null ? '' : '${lastRatio[18]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[18]}'==null?'':'${lastCost[18]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[18]}' == null ? '' : '${lastTime[18]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+              //20
+              Container(
+                height: s.height / 7.4,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "inappropriate interventions of clients".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '74 %',
+
+                                // '${lastRatio[19]}' == null ? '' : '${lastRatio[19]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[19]}'==null?'':'${lastCost[19]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[19]}' == null ? '' : '${lastTime[19]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-}),
-    Builder(builder: (BuildContext context){
-      var s =MediaQuery.of(context).size;
+        ),
+      );
+    }),
+    Builder(builder: (BuildContext context) {
+      var s = MediaQuery.of(context).size;
+      String _da = 'en';
+
       return
-    //21:25
-    Container(
-      height: s.height * .66,
-      // height: 512.0,
-
-      child: ListView(
-        children: [
-          //21
+          //21:25
           Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.2,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'سيطرة فضفاضة على المقاولين من الباطن',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 75 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Container(
+          height: s.height * .66,
+          // height: 512.0,
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //22
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.3,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'تفاصيل و تصاميم غير واضحة',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 78 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+          child: ListView(
+            children: [
+              //21
+              Container(
+                height: s.height / 7.2,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "loose control over subcontractors ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width /5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '75 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //23
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.2,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'ضعف التواصل بين أصحاب المصلحة في المشاريع',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 76 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+                                // '${lastRatio[20]}' == null ? '' : '${lastRatio[20]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[20]}'==null?'':'${lastCost[20]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[20]}' == null ? '' : '${lastTime[20]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          //24
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.2,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'نقص المهنيين المؤهلين ذوي الخبرة المناسبة للتصميم',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 76 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+              //22
+              Container(
+                height: s.height / 7.3,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "unclear design details and specifications ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '78 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //25
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.9,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'مشكلة تقنية',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 73 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+                                // '${lastRatio[21]}' == null ? '' : '${lastRatio[21]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[21]}'==null?'':'${lastCost[21]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[21]}' == null ? '' : '${lastTime[21]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              //23
+              Container(
+                height: s.height / 7.2,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "poor communication among projects stakeholders".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '76 %',
+
+                                // '${lastRatio[22]}' == null ? '' : '${lastRatio[22]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[22]}'==null?'':'${lastCost[22]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[22]}' == null ? '' : '${lastTime[22]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+              //24
+              Container(
+                height: s.height / 7.2,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "lack of qualified professionals with proper design expertise"
+                            .tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '76 %',
+
+                                // '${lastRatio[23]}' == null ? '' : '${lastRatio[23]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[23]}'==null?'':'${lastCost[23]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[23]}' == null ? '' : '${lastTime[23]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+              //25
+              Container(
+                height: s.height / 7.8,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "technical issues".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '73 %',
+
+                                // '${lastRatio[24]}' == null ? '' : '${lastRatio[24]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[24]}'==null?'':'${lastCost[24]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[24]}' == null ? '' : '${lastTime[24]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );}),
+        ),
+      );
+    }),
     //25:30
-  Builder(builder: (BuildContext context){
-  var s =MediaQuery.of(context).size;
-  return
-    Container(
-      height: s.height * .66,
-      // height: 512.0,
+    Builder(builder: (BuildContext context) {
+      var s = MediaQuery.of(context).size;
+      String _da = 'en';
 
-      child: ListView(
-        children: [
-          //25
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.3,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'عدم الإلمام بالمواد التقليدية وتقنيات البناء',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 78 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+      return Directionality(
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Container(
+          height: s.height * .66,
+          // height: 512.0,
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+          child: ListView(
+            children: [
+              //25
+              Container(
+                height: s.height / 7.3,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "unfamiliarity with traditional  materials and construction technologies "
+                            .tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '78 %',
+
+                                // '${lastRatio[25]}' == null ? '' : '${lastRatio[25]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[25]}'==null?'':'${lastCost[25]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[25]}' == null ? '' : '${lastTime[25]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          //26
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.8,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'نقص الخبرة',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 77 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+              //26
+              Container(
+                height: s.height / 7.8,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "lack of experience".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '77 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //27
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.5,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'وضع توقعات عالية للغاية',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 77 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+                                // '${lastRatio[26]}' == null ? '' : '${lastRatio[26]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[26]}'==null?'':'${lastCost[26]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[26]}' == null ? '' : '${lastTime[26]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          //28
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.6,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'العمال غير المهرة',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 79 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+              //27
+              Container(
+                height: s.height / 7.5,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "setting expectations too high ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '77 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //29
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.8,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'تصميم رديء',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 77 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+                                // '${lastRatio[27]}' == null ? '' : '${lastRatio[27]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[27]}'==null?'':'${lastCost[27]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[27]}' == null ? '' : '${lastTime[27]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              //28
+              Container(
+                height: s.height / 7.6,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "unskilled workers ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '79 %',
+
+                                // '${lastRatio[28]}' == null ? '' : '${lastRatio[28]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[28]}'==null?'':'${lastCost[28]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[28]}' == null ? '' : '${lastTime[28]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+              //29
+              Container(
+                height: s.height / 7.8,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "poor design ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '77 %',
+
+                                // '${lastRatio[29]}' == null ? '' : '${lastRatio[29]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[29]}'==null?'':'${lastCost[29]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[29]}' == null ? '' : '${lastTime[29]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
+              ),
+              //30
+            ],
           ),
-          //30
-        ],
-      ),
-    );
-  }),
+        ),
+      );
+    }),
     //31:33
-  Builder(builder: (BuildContext context){
-  var s =MediaQuery.of(context).size;
-  return
-    Container(
-      height: s.height * .66,
-      // height: 512.0,
+    Builder(builder: (BuildContext context) {
+      var s = MediaQuery.of(context).size;
+      String _da = 'en';
 
-      child: ListView(
-        children: [
-          //31
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.3,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'عدم الإلمام بعملية البناء',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 76 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+      return Directionality(
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Container(
+          height: s.height * .66,
+          // height: 512.0,
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+          child: ListView(
+            children: [
+              //31
+              Container(
+                height: s.height / 7.3,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "unfamiliarity with construction process".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '76 %',
+
+                                // '${lastRatio[30]}' == null ? '' : '${lastRatio[30]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[30]}'==null?'':'${lastCost[30]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[30]}' == null ? '' : '${lastTime[30]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
 
-          //32
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.4,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'تقلبات في معدلات العمالة / المواد',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 78 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+              //32
+              Container(
+                height: s.height / 7.4,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "fluctuations in labor / material rates ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '78 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                                // '${lastRatio[31]}' == null ? '' : '${lastRatio[31]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[31]}'==null?'':'${lastCost[31]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[31]}' == null ? '' : '${lastTime[31]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          //33
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              height: s.height / 7.4,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    // flex: 1,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              'هدف مرتفع للعلامة التقليدية',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              ' 78 %',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  //هنا هنحط حاصل ضرب النسبء ف الوقت
+              //33
+              Container(
+                height: s.height / 7.4,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      // flex: 1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                        "high target for  traditional mark ratting ".tr,
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 5.2,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '78 %',
 
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                  Container(
-                    width: s.width / 5,
-                    child: Card(
-                        child: Center(
-                            child: Text(
-                              '  ',
-                              style: styleForValueLAbel(),
-                              textAlign: TextAlign.center,
-                            ))),
-                  ),
-                ],
+                                // '${lastRatio[32]}' == null ? '' : '${lastRatio[32]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    //هنا هنحط حاصل ضرب النسبء ف الوقت
+
+                    Container(
+                      width: s.width / 4.1,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastCost[32]}'==null?'':'${lastCost[32]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                    Container(
+                      width: s.width / 4.7,
+                      child: Card(
+                          child: Center(
+                              child: Text(
+                                '${lastTime[32]}' == null ? '' : '${lastTime[32]}',
+                        style: styleForValueLAbel(),
+                        textAlign: TextAlign.center,
+                      ))),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 35.0),
+                child: Container(
+                  height: s.height / 5,
+                  width: s.width / 4,
+                  child: PdfTrad(
+                      lstCost:lastCost,
+                      lstTime:lastTime
+                  ),
+                ),
+              )
+            ],
           ),
-        ],
-      ),
-    );})
-
-
+        ),
+      );
+    })
   ];
 
   @override
   Widget build(BuildContext context) {
+    print("last area for traditional ${widget.nextAreaTrad}");
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          widgets[_controller.index],
-          TabPageSelector(controller: _controller),
-          TextButton(onPressed: _moveNext, child: Text("التالى")),
-        ],
+      child: Directionality(
+        textDirection: _da == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            widgets[_controller.index],
+            TabPageSelector(controller: _controller),
+            TextButton(onPressed: _moveNext, child: Text("next".tr)),
+          ],
+        ),
       ),
     );
   }

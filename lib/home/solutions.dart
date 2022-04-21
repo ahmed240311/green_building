@@ -1,9 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:green_building/models/Product.dart';
 
 import '../style.dart';
 import 'apppar.dart';
+
+G g = G();
 
 class Solutions extends StatelessWidget {
   final _scaffdKey = GlobalKey<ScaffoldState>();
@@ -23,7 +25,7 @@ class Solutions extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: Center(
                 child: Text(
-                  "قياس تخفيف المخاطر",
+                  "Risk mitigation".tr,
                   style: styleForLabel(),
                 ),
               ),
@@ -32,193 +34,41 @@ class Solutions extends StatelessWidget {
               endIndent: 75.0,
               indent: 75.0,
               height: 1.5,
-              thickness: 1,
+              thickness: 1.06,
               color: Colors.green,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
-              child: ListTile(
-                title: Card(
-
-                  child: Center(
-
-                    child: Text(
-                      'صناديق الطوارئ في حالات الطوارئ',
-                      style: styleForValueLAbel(),
-                    ),
-                  ),
-                ),
-                leading:forIcon(),
-                onTap: null,
-              ),
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'استخدم المشاريع الخضراء السابقة كمرجع',
-                    textAlign:TextAlign.center ,
-
-                    style: styleForValueLAbel(),
-                  ),
+              child: Container(
+                height: size.height / 1.39,
+                child: ListView.builder(
+                  itemCount: g.Suggestion.length,
+                  itemBuilder: (context, i) {
+                    return ListTile(
+                      title: Card(
+                        child: Center(
+                          child: Text(
+                            '${g.Suggestion[i]}'.tr,
+                            textAlign: TextAlign.center,
+                            style: styleForValueLAbel(),
+                          ),
+                        ),
+                      ),
+                      leading: forIcon(),
+                      onTap: null,
+                    );
+                  },
                 ),
               ),
-              leading: forIcon(),
-              onTap: null,
             ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'الاستثمار في البحث عن مواد وعمليات البناء الأخضر',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'تطوير برامج ترويجية لأعضاء الفريق',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'نظام إدارة فعال لتغييرات التصميم',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'تحسين الاتصال والتنسيق بين أصحاب المصلحة',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'فهم هدف العملاء في مشروع المباني الخضراء',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'مراقبة جودة الرسومات والمواصفات الإنشائية',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'استفد من عملية التصميم المتكاملة',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'شراء التأمين عند تخصيص المخاطر',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'الحوافز والتدابير المالية من الحكومة',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'إعلانات وبرامج لزيادة وعي المجتمع بأهمية المرافق الخضراء',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            ListTile(
-              title: Card(
-                child: Center(
-                  child: Text(
-                    'إغراء استخدام المباني الخضراء',
-                    textAlign:TextAlign.center ,
-                    style: styleForValueLAbel(),
-                  ),
-                ),
-              ),
-              leading: forIcon(),
-              onTap: null,
-            ),
-            SizedBox(
-              height: size.height*.01,
-            )
           ],
         ),
       ),
     );
   }
 }
-forIcon(){
+
+forIcon() {
   return Icon(
     Icons.account_balance_outlined,
     color: Colors.green,

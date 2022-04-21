@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LTabPageSelector extends StatefulWidget {
   @override
@@ -26,35 +27,35 @@ class _LTabPageSelectorState extends State<LTabPageSelector>
 
   List<Widget> widgets = [
     Container(
-        height: 180,
+        height: 178,
         width: double.infinity,
         child: Image.asset(
           "assets/images/5.jpg",
           fit: BoxFit.fill,
         )),
     Container(
-        height: 180,
+        height: 178,
         width: double.infinity,
         child: Image.asset(
           "assets/images/4.jpg",
           fit: BoxFit.fill,
         )),
     Container(
-        height: 180,
+        height: 178,
         width: double.infinity,
         child: Image.asset(
           "assets/images/3.jpg",
           fit: BoxFit.fill,
         )),
     Container(
-        height: 180,
+        height: 178,
         width: double.infinity,
         child: Image.asset(
           "assets/images/2.jpg",
           fit: BoxFit.fill,
         )),
     Container(
-        height: 180,
+        height: 178,
         width: double.infinity,
         child: Image.asset(
           "assets/images/1.jpg",
@@ -72,7 +73,7 @@ class _LTabPageSelectorState extends State<LTabPageSelector>
         children: [
           widgets[_controller.index],
           TabPageSelector(controller: _controller),
-          TextButton(onPressed: _moveNext, child: Text("التالى")),
+          TextButton(onPressed: _moveNext, child: Text("next".tr)),
         ],
       ),
     );

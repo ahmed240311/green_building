@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../style.dart';
 import 'home_screen.dart';
 
 allAppBar() {
@@ -49,14 +51,8 @@ introAppBar() {
     ),
     elevation: 5,
     title: Text(
-      "مخاطر المشاريع الخضراء",
-      style: TextStyle(
-          letterSpacing: 1.0,
-          // color: Col,
-          // foreground: Paint()..shader = linearGradient,
-          fontFamily: 'Cairo-Black',
-          fontWeight: FontWeight.bold,
-          fontSize: 21.5),
+      "Risks Of Green Building".tr,
+      style: StyleforText(),
     ),
     centerTitle: true,
   );
@@ -81,7 +77,7 @@ soluAppBar() {
     ),
     elevation: 5,
     title: Text(
-      "مقترحات الحل",
+      "Suggestions".tr,
       style: TextStyle(
           letterSpacing: 1.0,
           // color: Col,
